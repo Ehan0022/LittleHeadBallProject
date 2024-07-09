@@ -57,6 +57,8 @@ public class PlayerController_2 : MonoBehaviour
                 ballRigidbody.AddForce(new Vector2(-xPower, yPower));
             }
         }
+
+        
     }
 
 
@@ -72,7 +74,7 @@ public class PlayerController_2 : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
         {
-            rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            rigidbody.velocity = new Vector2(rigidbody.velocity.x, jumpForce);
             isGrounded = false;
         }
 
@@ -94,6 +96,7 @@ public class PlayerController_2 : MonoBehaviour
         {
             isGrounded = false;
         }
+        
     }
 
 

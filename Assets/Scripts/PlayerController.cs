@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        
     }
 
     public float forwardRaycastDistance = 0.65f;
@@ -26,13 +27,16 @@ public class PlayerController : MonoBehaviour
     private float xPower;
     private float yPower;
     private float distance;
+
+    public Vector2 areaCenter; // Dikdörtgen alanýn merkezi
+    public Vector2 areaSize;   // Dikdörtgen alanýn boyutu
     void Update()
     {
         HandleMovement();
 
-        Vector2 startPoint = foot.position + Vector3.up * 0.1f;
+        /*Vector2 startPoint = foot.position + Vector3.up * 0.1f;
         Vector2 endPoint = startPoint + Vector2.right * forwardRaycastDistance;
-        Debug.DrawLine(startPoint, endPoint, Color.green); 
+        Debug.DrawLine(startPoint, endPoint, Color.green);*/
         
         RaycastHit2D ballHit = Physics2D.Raycast(foot.position + Vector3.up * 0.1f, Vector2.right, forwardRaycastDistance, ballLayerMask);
 
@@ -48,7 +52,7 @@ public class PlayerController : MonoBehaviour
         yPower = ((1.0f - distance) / 0.001f) * 0.025f;
             
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {       
             animator.SetTrigger("Kick");
 
@@ -57,6 +61,23 @@ public class PlayerController : MonoBehaviour
                 ballRigidbody.AddForce(new Vector2(xPower, yPower));
             }
         }
+
+        if(Input.GetKeyDown(KeyCode.Space) && !isGrounded)
+        {
+            bool isObjectInArea = IsObjectInArea();
+            if (isObjectInArea)
+            {
+                animator.SetTrigger("HeadKick");
+                HeadKick();
+                Debug.Log("Kafa vuruldu");              
+            }
+            else
+            {
+                animator.SetTrigger("HeadKick");
+                Debug.Log("Vurulmadý");
+            }
+        }
+
     }
 
      
@@ -72,7 +93,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.W) && isGrounded)
         {
-            rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            rigidbody.velocity = new Vector2(rigidbody.velocity.x, jumpForce);
             isGrounded = false;
         }
 
@@ -96,8 +117,43 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
+    [SerializeField] Transform headKickPoint;
     
+    
+    bool IsObjectInArea()
+    {
+        areaCenter = headKickPoint.position;
+        Rect rect = new Rect(areaCenter - areaSize / 2, areaSize);
+        RaycastHit2D hit = Physics2D.BoxCast(areaCenter, areaSize, 0f, Vector2.zero, 0f, ballLayerMask);
+
+        // Raycast sonucu kontrol et ve ýþýný çiz
+        if (hit.collider != null)
+        {
+            // Iþýný çiz
+            Debug.DrawRay(hit.point, Vector2.up * 0.1f, Color.red, 1f);
+            Debug.DrawRay(hit.point, Vector2.right * 0.1f, Color.red, 1f);
+
+            // Çarpýþma noktasýnýn dikdörtgen içinde olup olmadýðýný kontrol et
+            if (rect.Contains(hit.point))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        // Gizmos ile dikdörtgen alaný çiz
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(areaCenter, areaSize);
+    }
+
+    [SerializeField] private float headKickPower;
+    private void HeadKick()
+    {
+        ballRigidbody.AddForce(new Vector2(headKickPower, 0f));
+    }
 
 
 

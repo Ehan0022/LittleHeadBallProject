@@ -29,7 +29,7 @@ public class Goal : MonoBehaviour
         IEnumerator ExampleCoroutine()
         {
             // Ýlk kýsým
-            Debug.Log("Korutini baþladý: " + Time.time);
+            //Debug.Log("Korutini baþladý: " + Time.time);
 
             // 2 saniye bekleyin
             yield return new WaitForSeconds(2);
@@ -37,7 +37,7 @@ public class Goal : MonoBehaviour
 
 
         // Ýkinci kýsým
-        Debug.Log("2 saniye geçti: " + Time.time);
+        //Debug.Log("2 saniye geçti: " + Time.time);
         }
 }
 
