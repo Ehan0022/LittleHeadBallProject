@@ -11,6 +11,7 @@ public class PlayerController_2 : MonoBehaviour
     [SerializeField] LayerMask ballLayerMask;
     [SerializeField] Transform foot;
     [SerializeField] Rigidbody2D ballRigidbody;
+    [SerializeField] GameObject ball;
 
     [SerializeField] Transform ballDistancePoint;
 
@@ -48,7 +49,7 @@ public class PlayerController_2 : MonoBehaviour
         yPower = ((1.0f - distance) / 0.001f) * 0.025f;
 
 
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P) && isGrounded)
         {
             animator.SetTrigger("Kick");
 
@@ -58,7 +59,24 @@ public class PlayerController_2 : MonoBehaviour
             }
         }
 
-        
+        if (Input.GetKeyDown(KeyCode.P) && !isGrounded)
+        {
+            bool isObjectInArea = IsObjectInArea();
+            if (isObjectInArea)
+            {
+                animator.SetTrigger("HeadKick");
+                HeadKick();
+                Debug.Log("Kafa vuruldu");
+            }
+            else
+            {
+                animator.SetTrigger("HeadKick");
+                Debug.Log("Vurulmadý");
+            }
+        }
+
+
+
     }
 
 
@@ -97,6 +115,73 @@ public class PlayerController_2 : MonoBehaviour
             isGrounded = false;
         }
         
+    }
+
+    [SerializeField] Transform headKickPoint;
+
+    public Vector2 areaCenter; // Dikdörtgen alanýn merkezi
+    public Vector2 areaSize;   // Dikdörtgen alanýn boyutu
+    bool IsObjectInArea()
+    {
+        areaCenter = headKickPoint.position;
+        Rect rect = new Rect(areaCenter - areaSize / 2, areaSize);
+        RaycastHit2D hit = Physics2D.BoxCast(areaCenter, areaSize, 0f, Vector2.zero, 0f, ballLayerMask);
+
+        // Raycast sonucu kontrol et ve ýþýný çiz
+        if (hit.collider != null)
+        {
+            // Iþýný çiz
+            Debug.DrawRay(hit.point, Vector2.up * 0.1f, Color.red, 1f);
+            Debug.DrawRay(hit.point, Vector2.right * 0.1f, Color.red, 1f);
+
+            // Çarpýþma noktasýnýn dikdörtgen içinde olup olmadýðýný kontrol et
+            if (rect.Contains(hit.point))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        // Gizmos ile dikdörtgen alaný çiz
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(areaCenter, areaSize);
+    }
+
+    [SerializeField] private float headKickPower;
+
+    private void HeadKick()
+    {
+        float ballHeight = ball.transform.position.y;
+        float fixedHeight = headKickPoint.position.y;
+        if ((ballHeight - fixedHeight) > 0f && (ballHeight - fixedHeight) < 0.11f)
+        {
+            ballRigidbody.AddForce(new Vector2(-headKickPower, 1f));
+            Debug.Log("Birinci yükseklikten vuruldu");
+        }
+        else if ((ballHeight - fixedHeight) >= 0.10f && (ballHeight - fixedHeight) < 0.20f)
+        {
+            ballRigidbody.AddForce(new Vector2(-headKickPower, 2f));
+            Debug.Log("Ýkinci yükseklikten vuruldu");
+        }
+        else if ((ballHeight - fixedHeight) >= 0.20f && (ballHeight - fixedHeight) < 0.30f)
+        {
+            ballRigidbody.AddForce(new Vector2(-headKickPower, 3f));
+            Debug.Log("Üçüncü yükseklikten vuruldu");
+        }
+        else if ((ballHeight - fixedHeight) >= 0.30f && (ballHeight - fixedHeight) < 0.45f)
+        {
+            ballRigidbody.AddForce(new Vector2(-headKickPower, 4f));
+            Debug.Log("Dördüncü yükseklikten vuruldu");
+        }
+        else
+        {
+            ballRigidbody.AddForce(new Vector2(-headKickPower, 0));
+            Debug.Log("Alttan vuruldu");
+        }
+
     }
 
 

@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask ballLayerMask;
     [SerializeField] Transform foot;
     [SerializeField] Rigidbody2D ballRigidbody;
+    [SerializeField] GameObject ball;
     
     [SerializeField] Transform ballDistancePoint;
 
@@ -150,9 +151,37 @@ public class PlayerController : MonoBehaviour
     }
 
     [SerializeField] private float headKickPower;
+
     private void HeadKick()
     {
-        ballRigidbody.AddForce(new Vector2(headKickPower, 0f));
+        float ballHeight = ball.transform.position.y;
+        float fixedHeight = headKickPoint.position.y;
+        if((ballHeight-fixedHeight) > 0f && (ballHeight - fixedHeight) < 0.11f)
+        {
+            ballRigidbody.AddForce(new Vector2(headKickPower, 1f));
+            Debug.Log("Birinci yükseklikten vuruldu");
+        }
+        else if ((ballHeight - fixedHeight) >= 0.10f && (ballHeight - fixedHeight) < 0.20f)
+        {
+            ballRigidbody.AddForce(new Vector2(headKickPower, 2f));
+            Debug.Log("Ýkinci yükseklikten vuruldu");
+        }
+        else if ((ballHeight - fixedHeight) >= 0.20f && (ballHeight - fixedHeight) < 0.30f)
+        {
+            ballRigidbody.AddForce(new Vector2(headKickPower, 3f));
+            Debug.Log("Üçüncü yükseklikten vuruldu");
+        }
+        else if ((ballHeight - fixedHeight) >= 0.30f && (ballHeight - fixedHeight) < 0.45f)
+        {
+            ballRigidbody.AddForce(new Vector2(headKickPower, 4f));
+            Debug.Log("Dördüncü yükseklikten vuruldu");
+        }
+        else
+        {
+            ballRigidbody.AddForce(new Vector2(headKickPower,0));
+            Debug.Log("Alttan vuruldu");
+        }
+
     }
 
 

@@ -184,6 +184,37 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f73a67530af02cb46b6432af0ad2b296, type: 3}
+--- !u!1 &101982908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 101982909}
+  m_Layer: 0
+  m_Name: HeadKickCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &101982909
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101982908}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.089, y: 0.07, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 807278274}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &174062220
 GameObject:
   m_ObjectHideFlags: 0
@@ -658,6 +689,7 @@ MonoBehaviour:
     m_Bits: 128
   foot: {fileID: 2012689181}
   ballRigidbody: {fileID: 0}
+  ball: {fileID: 0}
   ballDistancePoint: {fileID: 0}
   forwardRaycastDistance: 0.72
   areaCenter: {x: 0, y: 0}
@@ -913,8 +945,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!60 &594733495
-PolygonCollider2D:
+--- !u!61 &594733495
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -926,7 +958,7 @@ PolygonCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.01}
+  m_Offset: {x: -0.000264382, y: 0.008091984}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -936,12 +968,9 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -0.055, y: 0.024999997}
-      - {x: -0.055, y: -0.024999999}
-      - {x: 0.055, y: -0.024999999}
-      - {x: 0.03126411, y: 0.025191763}
+  serializedVersion: 2
+  m_Size: {x: 0.10947123, y: 0.033816036}
+  m_EdgeRadius: 0
 --- !u!1001 &667610373
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1115,8 +1144,13 @@ MonoBehaviour:
     m_Bits: 128
   foot: {fileID: 1595776993}
   ballRigidbody: {fileID: 1233253713}
+  ball: {fileID: 1233253712}
   ballDistancePoint: {fileID: 1874669158}
   forwardRaycastDistance: 0.65
+  headKickPoint: {fileID: 101982909}
+  areaCenter: {x: 0, y: 0}
+  areaSize: {x: 0.8, y: 0.8}
+  headKickPower: 12
 --- !u!95 &807278271
 Animator:
   serializedVersion: 5
@@ -1201,6 +1235,7 @@ Transform:
   - {fileID: 276982020}
   - {fileID: 1357461086}
   - {fileID: 1595776993}
+  - {fileID: 101982909}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -2630,12 +2665,13 @@ MonoBehaviour:
     m_Bits: 128
   foot: {fileID: 422523532}
   ballRigidbody: {fileID: 1233253713}
+  ball: {fileID: 1233253712}
   ballDistancePoint: {fileID: 1409258396}
   forwardRaycastDistance: 0.65
   areaCenter: {x: 0, y: 0}
-  areaSize: {x: 0.85, y: 0.85}
+  areaSize: {x: 0.8, y: 0.8}
   headKickPoint: {fileID: 541723733}
-  headKickPower: 15
+  headKickPower: 12
 --- !u!61 &1612285861
 BoxCollider2D:
   m_ObjectHideFlags: 0
