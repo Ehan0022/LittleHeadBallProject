@@ -12,15 +12,16 @@ public class GameManagerScript : MonoBehaviour
     Vector2 player1Pos;
     Vector2 player2Pos;
     Vector2 ballPos;
-
+    
 
     public int leftGoals = 0;
     public int rightGoals = 0;
-
+    public bool scoringEnabled = true;
     public event EventHandler OnGoalScored;
 
     private void Start()
     {
+        scoringEnabled = true;
         ballRigidBody = ball.GetComponent<Rigidbody2D>();
         player1Pos = player1.transform.position;
         player2Pos = player2.transform.position;
@@ -34,21 +35,27 @@ public class GameManagerScript : MonoBehaviour
         player2.transform.position = player2Pos;
         ballRigidBody.velocity = Vector2.zero;
         ball.transform.position = ballPos;
+        scoringEnabled = true;
     }
 
     public void IncementGoal(string s)
     {
-        if(s.Equals("Right"))
+        if(scoringEnabled)
         {
-            rightGoals++;
-            OnGoalScored?.Invoke(this, EventArgs.Empty);
+            if (s.Equals("Right"))
+            {
+                rightGoals++;
+                OnGoalScored?.Invoke(this, EventArgs.Empty);
+                scoringEnabled = false;
 
-        }
-        else if(s.Equals("Left"))
-        {
-            leftGoals++;
-            OnGoalScored?.Invoke(this, EventArgs.Empty);
-        }
+            }
+            else if (s.Equals("Left"))
+            {
+                leftGoals++;
+                OnGoalScored?.Invoke(this, EventArgs.Empty);
+                scoringEnabled = false;
+            }
+        }    
     }
 
 

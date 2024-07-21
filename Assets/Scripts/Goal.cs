@@ -13,16 +13,19 @@ public class Goal : MonoBehaviour
     {
         if (collision.gameObject.tag.Equals("Ball"))
         {
-            if (gameObject.tag.Equals("RightGoal"))
+            if(gameManager.scoringEnabled)
             {
-                gameManager.IncementGoal("Right");
-                StartCoroutine(ExampleCoroutine());
-            }
-            else
-            {
-                gameManager.IncementGoal("Left");
-                StartCoroutine(ExampleCoroutine());
-            }
+                if (gameObject.tag.Equals("RightGoal"))
+                {
+                    gameManager.IncementGoal("Right");
+                    StartCoroutine(ExampleCoroutine());
+                }
+                else
+                {
+                    gameManager.IncementGoal("Left");
+                    StartCoroutine(ExampleCoroutine());
+                }
+            }           
         }
      }
 

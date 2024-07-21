@@ -691,9 +691,10 @@ MonoBehaviour:
   ballRigidbody: {fileID: 0}
   ball: {fileID: 0}
   ballDistancePoint: {fileID: 0}
+  kickCenterPoint: {fileID: 0}
+  areaSizeHead: {x: 0, y: 0}
+  areaSizeFoot: {x: 0, y: 0}
   forwardRaycastDistance: 0.72
-  areaCenter: {x: 0, y: 0}
-  areaSize: {x: 0, y: 0}
   headKickPoint: {fileID: 0}
   headKickPower: 0
 --- !u!1 &519420028
@@ -829,6 +830,7 @@ MonoBehaviour:
   ball: {fileID: 1233253712}
   leftGoals: 0
   rightGoals: 0
+  scoringEnabled: 1
 --- !u!1 &541723732
 GameObject:
   m_ObjectHideFlags: 0
@@ -2362,6 +2364,37 @@ Transform:
   m_Father: {fileID: 1612285863}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1426006444
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1426006445}
+  m_Layer: 0
+  m_Name: FootKickPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1426006445
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1426006444}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.103, y: -0.137, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1612285863}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1446195158
 GameObject:
   m_ObjectHideFlags: 0
@@ -2666,10 +2699,11 @@ MonoBehaviour:
   foot: {fileID: 422523532}
   ballRigidbody: {fileID: 1233253713}
   ball: {fileID: 1233253712}
-  ballDistancePoint: {fileID: 1409258396}
+  ballDistancePoint: {fileID: 1426006445}
+  kickCenterPoint: {fileID: 1426006445}
+  areaSizeHead: {x: 0.8, y: 0.8}
+  areaSizeFoot: {x: 0.4, y: 0.4}
   forwardRaycastDistance: 0.65
-  areaCenter: {x: 0, y: 0}
-  areaSize: {x: 0.8, y: 0.8}
   headKickPoint: {fileID: 541723733}
   headKickPower: 12
 --- !u!61 &1612285861
@@ -2736,6 +2770,7 @@ Transform:
   - {fileID: 594733492}
   - {fileID: 422523532}
   - {fileID: 541723733}
+  - {fileID: 1426006445}
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

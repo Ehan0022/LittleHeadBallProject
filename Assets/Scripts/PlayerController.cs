@@ -14,12 +14,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject ball;
     
     [SerializeField] Transform ballDistancePoint;
+    [SerializeField] Transform kickCenterPoint;
+
+    public Vector2 areaCenterHead; // Dikdörtgen alanýn merkezi
+    public Vector2 areaSizeHead;   // Dikdörtgen alanýn boyutu
+    public Vector2 areaCenterFoot; // Dikdörtgen alanýn merkezi
+    public Vector2 areaSizeFoot;
 
     void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-        
+        animator = GetComponent<Animator>();     
     }
 
     public float forwardRaycastDistance = 0.65f;
@@ -29,16 +34,16 @@ public class PlayerController : MonoBehaviour
     private float yPower;
     private float distance;
 
-    public Vector2 areaCenter; // Dikdörtgen alanýn merkezi
-    public Vector2 areaSize;   // Dikdörtgen alanýn boyutu
+       // Dikdörtgen alanýn boyutu
     void Update()
     {
         HandleMovement();
-
+        HandleHeadKicks();
+        FechCentersForGizmos();
         /*Vector2 startPoint = foot.position + Vector3.up * 0.1f;
         Vector2 endPoint = startPoint + Vector2.right * forwardRaycastDistance;
         Debug.DrawLine(startPoint, endPoint, Color.green);*/
-        
+
         RaycastHit2D ballHit = Physics2D.Raycast(foot.position + Vector3.up * 0.1f, Vector2.right, forwardRaycastDistance, ballLayerMask);
 
         if(ballHit.collider != null)
@@ -53,7 +58,7 @@ public class PlayerController : MonoBehaviour
         yPower = ((1.0f - distance) / 0.001f) * 0.025f;
             
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        /*if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {       
             animator.SetTrigger("Kick");
 
@@ -61,28 +66,51 @@ public class PlayerController : MonoBehaviour
             {
                 ballRigidbody.AddForce(new Vector2(xPower, yPower));
             }
-        }
+        }*/
 
-        if(Input.GetKeyDown(KeyCode.Space) && !isGrounded)
+
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            bool isObjectInArea = IsObjectInArea();
+            bool isObjectInArea = IsObjectInArea(headKickPoint, Color.green, areaSizeFoot);
             if (isObjectInArea)
             {
-                animator.SetTrigger("HeadKick");
-                HeadKick();
-                Debug.Log("Kafa vuruldu");              
+                animator.SetTrigger("Kick");
+                ballRigidbody.AddForce(new Vector2(15f, 5f));
             }
             else
             {
-                animator.SetTrigger("HeadKick");
-                Debug.Log("Vurulmadý");
+                animator.SetTrigger("Kick");
             }
         }
+
 
     }
 
      
     int xDir = 0;
+
+    
+    private void HandleHeadKicks()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && !isGrounded)
+        {
+            bool isObjectInArea = IsObjectInArea(kickCenterPoint, Color.red, areaSizeHead);
+            if (isObjectInArea)
+            {
+                animator.SetTrigger("HeadKick");
+                HeadKick();
+               // Debug.Log("Kafa vuruldu");
+            }
+            else
+            {
+                animator.SetTrigger("HeadKick");
+               // Debug.Log("Vurulmadý");
+            }
+        }
+    }
+
+
+
     private void HandleMovement()
     {
         if (Input.GetKey(KeyCode.D))
@@ -121,9 +149,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform headKickPoint;
     
     
-    bool IsObjectInArea()
+    bool IsObjectInArea(Transform pointTransform, Color color, Vector2 areaSize)
     {
-        areaCenter = headKickPoint.position;
+        Vector2 areaCenter = pointTransform.position;
         Rect rect = new Rect(areaCenter - areaSize / 2, areaSize);
         RaycastHit2D hit = Physics2D.BoxCast(areaCenter, areaSize, 0f, Vector2.zero, 0f, ballLayerMask);
 
@@ -131,8 +159,8 @@ public class PlayerController : MonoBehaviour
         if (hit.collider != null)
         {
             // Iþýný çiz
-            Debug.DrawRay(hit.point, Vector2.up * 0.1f, Color.red, 1f);
-            Debug.DrawRay(hit.point, Vector2.right * 0.1f, Color.red, 1f);
+            Debug.DrawRay(hit.point, Vector2.up * 0.1f, color, 1f);
+            Debug.DrawRay(hit.point, Vector2.right * 0.1f, color, 1f);
 
             // Çarpýþma noktasýnýn dikdörtgen içinde olup olmadýðýný kontrol et
             if (rect.Contains(hit.point))
@@ -147,7 +175,14 @@ public class PlayerController : MonoBehaviour
     {
         // Gizmos ile dikdörtgen alaný çiz
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(areaCenter, areaSize);
+        Gizmos.DrawWireCube(areaCenterHead, areaSizeHead);
+        Gizmos.DrawWireCube(areaCenterFoot, areaSizeFoot);
+    }
+
+    private void FechCentersForGizmos()
+    {
+        areaCenterHead = headKickPoint.position;
+        areaCenterFoot = kickCenterPoint.position;
     }
 
     [SerializeField] private float headKickPower;
