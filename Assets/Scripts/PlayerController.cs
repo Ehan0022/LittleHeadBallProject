@@ -219,6 +219,11 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    private void Kick()
+    {
+
+    }
+
 
 
 }
